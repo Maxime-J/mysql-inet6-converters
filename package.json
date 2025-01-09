@@ -1,0 +1,33 @@
+{
+  "name": "mysql-inet6-converters",
+  "version": "1.0.0",
+  "type": "module",
+  "author": "Maxime Jeunot <maxime.jeunot@gmail.com>",
+  "license": "GPL-2.0-only",
+  "keywords": [
+    "inet6_aton",
+    "inet6_ntoa",
+    "ipv4",
+    "ipv6"
+  ],
+  "files": [ "dist" ],
+  "exports": {
+    ".": {
+      "import": "./dist/inet6.js"
+    },
+    "./debug": {
+      "import": "./dist/inet6.debug.js"
+    }
+  },
+  "types": "dist/inet6.d.ts",
+  "scripts": {
+    "build": "tsc && vite build && BUILD_DEBUG=1 vite build",
+    "test": "mocha test.js"
+  },
+  "devDependencies": {
+    "mocha": "11.1.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7"
+  },
+  "packageManager": "yarn@4.6.0"
+}
