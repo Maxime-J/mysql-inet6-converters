@@ -31,7 +31,7 @@ const HEX_DIGITS = '0123456789abcdef';
 
 function toBytes4(ip: InetNeeds<'str'>): boolean {
   if (ip.str.length < 7 || ip.str.length > 15) {
-    console.error(`IPv4 (${ip.str}): Invalid size`);
+    console.error(`inet6_aton [IPv4](${ip.str}): Invalid size`);
     return false;
   }
 
@@ -47,39 +47,39 @@ function toBytes4(ip: InetNeeds<'str'>): boolean {
     const cNumber = +c;
     if (!isNaN(cNumber)) {
       if (++charsInGroup > 3) {
-        console.error(`IPv4 (${ip.str}): Too many characters in a group`);
+        console.error(`inet6_aton [IPv4](${ip.str}): Too many characters in a group`);
         return false;
       }
       byteValue = byteValue * 10 + cNumber;
       if (byteValue > 255) {
-        console.error(`IPv4 (${ip.str}): Invalid byte value`);
+        console.error(`inet6_aton [IPv4](${ip.str}): Invalid byte value`);
         return false;
       }
     } else if (c == '.') {
       if (charsInGroup == 0) {
-        console.error(`IPv4 (${ip.str}): Too few characters in a group`);
+        console.error(`inet6_aton [IPv4](${ip.str}): Too few characters in a group`);
         return false;
       }
       ip.bytes[dotCount] = byteValue;
       byteValue = 0;
       charsInGroup = 0;
       if (++dotCount > 3) {
-        console.error(`IPv4 (${ip.str}): Too many dots`);
+        console.error(`inet6_aton [IPv4](${ip.str}): Too many dots`);
         return false;
       }
     } else {
-      console.error(`IPv4 (${ip.str}): Invalid character`);
+      console.error(`inet6_aton [IPv4](${ip.str}): Invalid character`);
       return false;
     }
   }
 
   if (c == '.') {
-    console.error(`IPv4 (${ip.str}): Invalid ending`);
+    console.error(`inet6_aton [IPv4](${ip.str}): Invalid ending`);
     return false;
   }
 
   if (dotCount != 3) {
-    console.error(`IPv4 (${ip.str}): Too few groups`);
+    console.error(`inet6_aton [IPv4](${ip.str}): Too few groups`);
     return false;
   }
 
@@ -90,7 +90,7 @@ function toBytes4(ip: InetNeeds<'str'>): boolean {
 
 function toBytes6(ip: InetNeeds<'str'>): boolean {
   if (ip.str.length < 2 || ip.str.length > 8 * 4 + 7) {
-    console.error(`IPv6 (${ip.str}): Invalid size`);
+    console.error(`inet6_aton [IPv6](${ip.str}): Invalid size`);
     return false;
   }
 
@@ -101,7 +101,7 @@ function toBytes6(ip: InetNeeds<'str'>): boolean {
   if (ip.str[pos] == ':') {
     pos++;
     if (ip.str[pos] != ':') {
-      console.error(`IPv6 (${ip.str}): Can not start with :x`);
+      console.error(`inet6_aton [IPv6](${ip.str}): Can not start with :x`);
       return false;
     }
   }
@@ -120,7 +120,7 @@ function toBytes6(ip: InetNeeds<'str'>): boolean {
 
       if (!charsInGroup) {
         if (gap != null) {
-          console.error(`IPv6 (${ip.str}): Too many gaps(::)`);
+          console.error(`inet6_aton [IPv6](${ip.str}): Too many gaps(::)`);
           return false;
         }
         gap = dst;
@@ -128,12 +128,12 @@ function toBytes6(ip: InetNeeds<'str'>): boolean {
       }
 
       if (pos + 1 == ip.str.length) {
-        console.error(`IPv6 (${ip.str}): Invalid ending`);
+        console.error(`inet6_aton [IPv6](${ip.str}): Invalid ending`);
         return false;
       }
 
       if (dst + 2 > IN6_ADDR_SIZE) {
-        console.error(`IPv6 (${ip.str}): Too many groups (1)`);
+        console.error(`inet6_aton [IPv6](${ip.str}): Too many groups (1)`);
         return false;
       }
 
@@ -145,12 +145,12 @@ function toBytes6(ip: InetNeeds<'str'>): boolean {
       groupValue = 0;
     } else if (c == '.') {
       if (dst + IN_ADDR_SIZE > IN6_ADDR_SIZE) {
-        console.error(`IPv6 (${ip.str}): Unexpected IPv4-part`);
+        console.error(`inet6_aton [IPv6](${ip.str}): Unexpected IPv4-part`);
         return false;
       }
       const ip4: InetNeeds<'str'> = { str: ip.str.substring(groupStart + 1) };
       if (!toBytes4(ip4)) {
-        console.error(`IPv6 (${ip.str}): Invalid IPv4-part`);
+        console.error(`inet6_aton [IPv6](${ip.str}): Invalid IPv4-part`);
         return false;
       }
       ip.bytes.set(ip4.bytes!, dst);
@@ -161,12 +161,12 @@ function toBytes6(ip: InetNeeds<'str'>): boolean {
       const hdp = HEX_DIGITS.indexOf(c.toLowerCase());
 
       if (hdp == -1) {
-        console.error(`IPv6 (${ip.str}): Invalid character`);
+        console.error(`inet6_aton [IPv6](${ip.str}): Invalid character`);
         return false;
       }
 
       if (charsInGroup >= 4) {
-        console.error(`IPv6 (${ip.str}): Too many digits in group`);
+        console.error(`inet6_aton [IPv6](${ip.str}): Too many digits in group`);
         return false;
       }
 
@@ -179,7 +179,7 @@ function toBytes6(ip: InetNeeds<'str'>): boolean {
 
   if (charsInGroup > 0) {
     if (dst + 2 > IN6_ADDR_SIZE) {
-      console.error(`IPv6 (${ip.str}): Too many groups (2)`);
+      console.error(`inet6_aton [IPv6](${ip.str}): Too many groups (2)`);
       return false;
     }
     ip.bytes[dst] = (groupValue >> 8) & 0xff;
@@ -189,7 +189,7 @@ function toBytes6(ip: InetNeeds<'str'>): boolean {
 
   if (gap != null) {
     if (dst == IN6_ADDR_SIZE) {
-      console.error(`IPv6 (${ip.str}): No room for a gap (::)`);
+      console.error(`inet6_aton [IPv6](${ip.str}): No room for a gap (::)`);
       return false;
     }
 
@@ -204,7 +204,7 @@ function toBytes6(ip: InetNeeds<'str'>): boolean {
   }
 
   if (dst < IN6_ADDR_SIZE) {
-    console.error(`IPv6 (${ip.str}): Too few groups`);
+    console.error(`inet6_aton [IPv6](${ip.str}): Too few groups`);
     return false;
   }
 
