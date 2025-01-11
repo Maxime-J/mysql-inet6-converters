@@ -15,7 +15,7 @@ Two functions are exported:\
 `inet6_aton` ensures the conversion from a string to a binary representation, in the form of a bytes array (Uint8Array)\
 `inet6_ntoa` ensures the opposite conversion, from Uint8Array to string.
 
-Both returns `undefined` if the input isn't a valid address.
+Both return `undefined` if the input isn't a valid address.
 
 IPv4 and IPv6 are respectively always represented with 4 and 16 bytes in their binary forms.
 
@@ -42,7 +42,7 @@ const ip4Bytes = inet6_aton('292.168.1.20'); // undefined
 * inet6_aton [IPv6](292.168.1.20): Too few groups
 */
 ```
-Note that a string is sequentially processed until an eventual success by the IPv4 and IPv6 converters, an IPv6 converter which can possibly call the IPv4 one. This would help to clearly understand the logs.
+Note that a string is sequentially processed until an eventual success by the IPv4 and IPv6 converters, an IPv6 converter which can possibly call the IPv4 one. This should help to clearly understand the logs.
 
 ## Format constraints
 This stricly follows the MySQL functions, which means it has the same constraints:
