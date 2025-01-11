@@ -45,12 +45,17 @@ function toBytes4(ip: InetNeeds<'str'>): boolean {
   for (let pos = 0; pos < ip.str.length; pos++) {
     c = ip.str[pos];
     const cNumber = +c;
+
     if (!isNaN(cNumber)) {
-      if (++charsInGroup > 3) {
+      charsInGroup++;
+
+      if (charsInGroup > 3) {
         console.error(`inet6_aton [IPv4](${ip.str}): Too many characters in a group`);
         return false;
       }
+
       byteValue = byteValue * 10 + cNumber;
+
       if (byteValue > 255) {
         console.error(`inet6_aton [IPv4](${ip.str}): Invalid byte value`);
         return false;
@@ -60,10 +65,14 @@ function toBytes4(ip: InetNeeds<'str'>): boolean {
         console.error(`inet6_aton [IPv4](${ip.str}): Too few characters in a group`);
         return false;
       }
+
       ip.bytes[dotCount] = byteValue;
+
+      dotCount++;
       byteValue = 0;
       charsInGroup = 0;
-      if (++dotCount > 3) {
+
+      if (dotCount > 3) {
         console.error(`inet6_aton [IPv4](${ip.str}): Too many dots`);
         return false;
       }
@@ -123,6 +132,7 @@ function toBytes6(ip: InetNeeds<'str'>): boolean {
           console.error(`inet6_aton [IPv6](${ip.str}): Too many gaps(::)`);
           return false;
         }
+
         gap = dst;
         continue;
       }
@@ -148,12 +158,14 @@ function toBytes6(ip: InetNeeds<'str'>): boolean {
         console.error(`inet6_aton [IPv6](${ip.str}): Unexpected IPv4-part`);
         return false;
       }
+
       const ip4: InetNeeds<'str'> = { str: ip.str.substring(groupStart + 1) };
       if (!toBytes4(ip4)) {
         console.error(`inet6_aton [IPv6](${ip.str}): Invalid IPv4-part`);
         return false;
       }
       ip.bytes.set(ip4.bytes!, dst);
+
       dst += IN_ADDR_SIZE;
       charsInGroup = 0;
       break;
@@ -182,6 +194,7 @@ function toBytes6(ip: InetNeeds<'str'>): boolean {
       console.error(`inet6_aton [IPv6](${ip.str}): Too many groups (2)`);
       return false;
     }
+
     ip.bytes[dst] = (groupValue >> 8) & 0xff;
     ip.bytes[dst+1] = groupValue & 0xff;
     dst += 2;
@@ -228,6 +241,7 @@ function toString6(ip: InetNeeds<'bytes'>) {
   // 2. Find "the gap" -- longest sequence of zeros in IPv6-address.
 
   const gap = { pos: -1, length: -1 };
+
   (() => {
     const rg = { pos: -1, length: -1 };
 
