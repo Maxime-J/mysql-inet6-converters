@@ -1,7 +1,7 @@
 {
   "name": "mysql-inet6-converters",
   "description": "TypeScript adaptation of MySQL INET6_ATON and INET6_NTOA functions.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Maxime Jeunot <maxime.jeunot@gmail.com>",
   "license": "GPL-2.0-only",
   "repository": {
